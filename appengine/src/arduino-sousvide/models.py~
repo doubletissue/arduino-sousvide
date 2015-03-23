@@ -1,0 +1,8 @@
+from google.appengine.api import users
+from google.appengine.ext import ndb
+
+class Cooker(ndb.Model):
+    cooker_id = ndb.StringProperty(indexed=True)
+    constant = ndb.FloatProperty(repeated=True)
+    p_value = ndb.FloatProperty(repeated=True)
+    current_output = ndb.FloatProperty(repeated=True)

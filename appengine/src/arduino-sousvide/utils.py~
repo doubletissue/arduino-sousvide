@@ -1,0 +1,18 @@
+import models
+
+_DEFAULT_CONSTANT = .4
+_DEFAULT_P_VAL = .1
+
+def GetBaseValues():
+    base_vals = models.BaseValues.query().fetch(1)
+    if base_vals:
+        base_vals_instance = base_vals[0]
+        return base_vals_instance.constant, base_vals_instance.p_value
+    else:
+    
+
+def GetCooker(cooker_id):
+    cooker = models.Cooker.query().filter(models.Cooker.cooker_id==cooker_id).fetch(1)
+    if cooker:
+        cooker = cooker[0]
+    else:

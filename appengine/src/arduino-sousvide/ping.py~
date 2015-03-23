@@ -1,0 +1,75 @@
+import datetime
+import urllib2
+import webapp2
+
+from google.appengine.api import mail
+
+import models
+
+class GetCommand(webapp2.RequestHandler):
+
+    def _
+
+    def _GetCommand(self):
+        cooker_id = self.request.get("email")
+
+        cooker = models.Cooker.query().filter(models.Cooker.cooker_id==cooker_id).fetch(1)
+        if cooker:
+            cooker = cooker[0]
+        else:
+            base_vals = models.BaseValues.query().filter(models.Cooker.cooker_id==cooker_id).fetch(1)
+            if cooker:
+                cooker = cooker[0]
+            else:
+            cooker = models.Cooker(cooker_id=
+        if pre:
+            if email not in prev_feed.emails:
+                prev_feed.emails.append(email)
+        else:
+            prev_feed = models.Feed(feed_url=feed, 
+                                    emails=[email], 
+                                    content=[],
+                                    last_crawled=datetime.datetime.min)
+        prev_feed.put()
+        
+
+        email = self.request.get("email")
+        if not mail.is_email_valid(email):
+            raise Exception("Invalid email %s" % email)
+        feed = self.request.get("feed")
+        try:
+            result = urllib2.urlopen(feed)
+        except urllib2.URLError as e:
+            raise Exception("Invalid feed: %s" % feed)
+        
+        prev_feed = models.Feed.query().filter(models.Feed.feed_url==feed).fetch(1)
+        if prev_feed:
+            prev_feed = prev_feed[0]
+        if prev_feed:
+            if email not in prev_feed.emails:
+                prev_feed.emails.append(email)
+        else:
+            prev_feed = models.Feed(feed_url=feed, 
+                                    emails=[email], 
+                                    content=[],
+                                    last_crawled=datetime.datetime.min)
+        prev_feed.put()
+        return email,feed
+
+    def get(self):
+        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.out.write('Get Request\n')
+        email,feed = self.add_feed()
+        self.response.out.write("Email: %s\n" % email)
+        self.response.out.write("Feed: %s\n" % feed)
+
+    def post(self):
+        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.out.write('Post Request\n')
+        email,feed = self.add_feed()
+        self.response.out.write("Email: %s\n" % email)
+        self.response.out.write("Feed: %s\n" % feed)
+
+app = webapp2.WSGIApplication([
+    ('/add_feed', AddFeed),
+])
